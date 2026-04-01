@@ -3,59 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Leads Vibe — Подбор</title>
+<title>Leads Vibe</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap');
-  :root {
-    --bg:#F2F3F5; --card:#FFFFFF; --accent:#E8344A; --blue:#1A73E8;
-    --text:#1C1C1E; --muted:#8E8E93; --border:#E5E5EA;
-    --active-bg:#FEF0F2; --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.07);
-  }
+  :root{--bg:#F2F3F5;--card:#fff;--accent:#E8344A;--blue:#1A73E8;--text:#1C1C1E;--muted:#8E8E93;--border:#E5E5EA;--active-bg:#FEF0F2;--radius:14px;--shadow:0 2px 12px rgba(0,0,0,.07)}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:'Golos Text',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:12px 12px 130px;-webkit-font-smoothing:antialiased}
-
-  .header{display:flex;align-items:center;gap:10px;padding:4px 0 16px;animation:fadeUp .3s ease both}
+  .header{display:flex;align-items:center;gap:10px;padding:4px 0 16px;animation:fadeUp .3s ease}
   .logo{width:42px;height:42px;background:linear-gradient(135deg,#E8344A,#FF6B7A);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(232,52,74,.3)}
-  .header h1{font-size:19px;font-weight:700}
-  .header p{font-size:12px;color:var(--muted);margin-top:1px}
-
+  .header h1{font-size:19px;font-weight:700}.header p{font-size:12px;color:var(--muted);margin-top:1px}
   .card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease both}
-  .card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.10s}
-  .card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.20s}
-  .card:nth-child(6){animation-delay:.25s}
-
+  .card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}.card:nth-child(6){animation-delay:.25s}
   .section-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
-
-  /* Тип недвижимости — переключатель */
   .prop-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--border);border-radius:12px;padding:4px;margin-bottom:12px}
   .prop-tab{padding:9px;border:none;border-radius:9px;background:transparent;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center}
-  .prop-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,0.1)}
-
-  /* Тип жилья */
+  .prop-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,.1)}
   .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .type-btn{padding:12px 8px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
-  .type-btn .t-icon{font-size:22px;display:block;margin-bottom:4px}
-  .type-btn .t-name{font-size:13px;font-weight:600}
-  .type-btn .t-sub{font-size:11px;color:var(--muted);margin-top:2px}
-  .type-btn.active{border-color:var(--accent);background:var(--active-bg)}
-  .type-btn.active .t-name{color:var(--accent)}
-
-  /* Коммерческая */
+  .type-btn .t-icon{font-size:22px;display:block;margin-bottom:4px}.type-btn .t-name{font-size:13px;font-weight:600}.type-btn .t-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .type-btn.active{border-color:var(--accent);background:var(--active-bg)}.type-btn.active .t-name{color:var(--accent)}
   .comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
   .comm-btn{padding:10px 8px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
-  .comm-btn .c-icon{font-size:18px;display:block;margin-bottom:3px}
-  .comm-btn .c-name{font-size:12px;font-weight:600}
+  .comm-btn .c-icon{font-size:18px;display:block;margin-bottom:3px}.comm-btn .c-name{font-size:12px;font-weight:600}
   .comm-btn.active{border-color:var(--accent);background:var(--active-bg);color:var(--accent)}
-
-  /* Комнаты */
   .rooms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
   .room-btn{padding:10px 4px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;font-family:'Golos Text',sans-serif;user-select:none}
-  .room-btn .r-icon{font-size:17px;display:block}
-  .room-btn .r-label{font-size:12px;font-weight:600;margin-top:3px}
+  .room-btn .r-icon{font-size:17px;display:block}.room-btn .r-label{font-size:12px;font-weight:600;margin-top:3px}
   .room-btn.active{border-color:var(--accent);background:var(--active-bg);color:var(--accent)}
-
-  /* Бюджет */
   .price-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .price-field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
   .input-wrap{position:relative}
@@ -63,71 +38,59 @@
   .input-wrap input:focus{border-color:var(--blue);background:#fff}
   .input-wrap .cur{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);font-weight:600;pointer-events:none}
   .price-hint{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
-  .err{color:var(--accent);font-size:12px;margin-top:6px;display:none}
-  .err.show{display:block}
+  .err{color:var(--accent);font-size:12px;margin-top:6px;display:none}.err.show{display:block}
 
-  /* Регион */
-  .city-select{width:100%;padding:12px 36px 12px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:500;color:var(--text);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;outline:none;cursor:pointer;transition:border-color .15s}
-  .city-select:focus{border-color:var(--blue);background-color:#fff}
+  /* Поиск города */
+  .city-search-wrap{position:relative;margin-bottom:8px}
+  .city-search{width:100%;padding:11px 36px 11px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:500;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s}
+  .city-search:focus{border-color:var(--blue);background:#fff}
+  .city-search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+  .city-list{max-height:200px;overflow-y:auto;border:2px solid var(--border);border-radius:10px;background:var(--card);display:none}
+  .city-list.show{display:block}
+  .city-item{padding:10px 14px;cursor:pointer;font-size:14px;font-weight:500;border-bottom:1px solid var(--border);transition:background .1s}
+  .city-item:last-child{border-bottom:none}
+  .city-item:hover,.city-item.selected{background:var(--active-bg);color:var(--accent)}
+  .city-selected{padding:11px 12px;border:2px solid var(--accent);border-radius:10px;background:var(--active-bg);color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+  .city-selected .clear{font-size:18px;color:var(--muted)}
 
-  /* Итог */
   .summary{background:linear-gradient(135deg,#1A73E8,#0D47A1);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;color:#fff;display:none;animation:fadeUp .25s ease}
   .summary.show{display:block}
   .summary-title{font-size:11px;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
   .summary-chips{display:flex;flex-wrap:wrap;gap:6px}
   .s-chip{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
-
-  /* Оферта */
   .offer-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease .28s both}
   .offer-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
-  .offer-row input[type="checkbox"]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
+  .offer-row input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
   .offer-text{font-size:12px;line-height:1.6;color:var(--muted);user-select:none}
   .offer-text a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
-
-  /* Кнопка */
   .bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:10px 16px max(12px,env(safe-area-inset-bottom));background:rgba(242,243,245,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:10}
-  .launch-btn{width:100%;padding:15px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-family:'Golos Text',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s,opacity .1s;box-shadow:0 4px 18px rgba(232,52,74,.4)}
-  .launch-btn:active{transform:scale(.97)}
-  .launch-btn:disabled{background:#C7C7CC;box-shadow:none;cursor:not-allowed}
+  .launch-btn{width:100%;padding:15px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-family:'Golos Text',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s;box-shadow:0 4px 18px rgba(232,52,74,.4)}
+  .launch-btn:active{transform:scale(.97)}.launch-btn:disabled{background:#C7C7CC;box-shadow:none;cursor:not-allowed}
   .btn-count{background:rgba(255,255,255,.25);border-radius:20px;padding:2px 8px;font-size:13px}
-
   .hidden{display:none!important}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="logo">🏢</div>
   <div><h1>Leads Vibe</h1><p>Настрой параметры подбора</p></div>
 </div>
 
-<!-- Жилая / Коммерческая -->
+<!-- Тип недвижимости -->
 <div class="card">
   <div class="section-label">Тип недвижимости</div>
   <div class="prop-tabs">
     <button class="prop-tab active" onclick="setPropType('residential')">🏠 Жилая</button>
     <button class="prop-tab" onclick="setPropType('commercial')">🏢 Коммерческая</button>
   </div>
-
-  <!-- Жилая -->
   <div id="residentialSection">
     <div class="section-label" style="margin-top:4px">Тип жилья</div>
     <div class="type-grid">
-      <div class="type-btn" data-type="new" onclick="toggleType('new')">
-        <span class="t-icon">🏗️</span>
-        <div class="t-name">Новостройка</div>
-        <div class="t-sub">от застройщика</div>
-      </div>
-      <div class="type-btn" data-type="old" onclick="toggleType('old')">
-        <span class="t-icon">🏠</span>
-        <div class="t-name">Вторичка</div>
-        <div class="t-sub">готовое жильё</div>
-      </div>
+      <div class="type-btn" data-type="new" onclick="toggleType('new')"><span class="t-icon">🏗️</span><div class="t-name">Новостройка</div><div class="t-sub">от застройщика</div></div>
+      <div class="type-btn" data-type="old" onclick="toggleType('old')"><span class="t-icon">🏠</span><div class="t-name">Вторичка</div><div class="t-sub">готовое жильё</div></div>
     </div>
   </div>
-
-  <!-- Коммерческая -->
   <div id="commercialSection" class="hidden">
     <div class="section-label" style="margin-top:4px">Тип объекта</div>
     <div class="comm-grid">
@@ -143,18 +106,18 @@
   </div>
 </div>
 
-<!-- Комнаты (только для жилой) -->
+<!-- Комнаты -->
 <div class="card" id="roomsCard">
   <div class="section-label">Количество комнат</div>
   <div class="rooms-grid">
-    <div class="room-btn" data-room="9"  onclick="toggleRoom(this)"><span class="r-icon">🔲</span><div class="r-label">Студия</div></div>
-    <div class="room-btn" data-room="1"  onclick="toggleRoom(this)"><span class="r-icon">1️⃣</span><div class="r-label">1К</div></div>
-    <div class="room-btn" data-room="2"  onclick="toggleRoom(this)"><span class="r-icon">2️⃣</span><div class="r-label">2К</div></div>
-    <div class="room-btn" data-room="3"  onclick="toggleRoom(this)"><span class="r-icon">3️⃣</span><div class="r-label">3К</div></div>
-    <div class="room-btn" data-room="4"  onclick="toggleRoom(this)"><span class="r-icon">4️⃣</span><div class="r-label">4К</div></div>
-    <div class="room-btn" data-room="5"  onclick="toggleRoom(this)"><span class="r-icon">5️⃣</span><div class="r-label">5К</div></div>
-    <div class="room-btn" data-room="6"  onclick="toggleRoom(this)"><span class="r-icon">🔑</span><div class="r-label">6К+</div></div>
-    <div class="room-btn"               onclick="selectAll()">      <span class="r-icon">✨</span><div class="r-label">Все</div></div>
+    <div class="room-btn" data-room="9" onclick="toggleRoom(this)"><span class="r-icon">🔲</span><div class="r-label">Студия</div></div>
+    <div class="room-btn" data-room="1" onclick="toggleRoom(this)"><span class="r-icon">1️⃣</span><div class="r-label">1К</div></div>
+    <div class="room-btn" data-room="2" onclick="toggleRoom(this)"><span class="r-icon">2️⃣</span><div class="r-label">2К</div></div>
+    <div class="room-btn" data-room="3" onclick="toggleRoom(this)"><span class="r-icon">3️⃣</span><div class="r-label">3К</div></div>
+    <div class="room-btn" data-room="4" onclick="toggleRoom(this)"><span class="r-icon">4️⃣</span><div class="r-label">4К</div></div>
+    <div class="room-btn" data-room="5" onclick="toggleRoom(this)"><span class="r-icon">5️⃣</span><div class="r-label">5К</div></div>
+    <div class="room-btn" data-room="6" onclick="toggleRoom(this)"><span class="r-icon">🔑</span><div class="r-label">6К+</div></div>
+    <div class="room-btn" onclick="selectAll()"><span class="r-icon">✨</span><div class="r-label">Все</div></div>
   </div>
 </div>
 
@@ -162,34 +125,29 @@
 <div class="card">
   <div class="section-label">Бюджет</div>
   <div class="price-row">
-    <div class="price-field">
-      <label>Цена от</label>
-      <div class="input-wrap">
-        <input type="number" id="pMin" placeholder="0" min="0" inputmode="numeric" oninput="update()">
-        <span class="cur">₽</span>
-      </div>
-    </div>
-    <div class="price-field">
-      <label>Цена до</label>
-      <div class="input-wrap">
-        <input type="number" id="pMax" placeholder="∞" min="0" inputmode="numeric" oninput="update()">
-        <span class="cur">₽</span>
-      </div>
-    </div>
+    <div class="price-field"><label>Цена от</label><div class="input-wrap"><input type="number" id="pMin" placeholder="0" min="0" inputmode="numeric" oninput="update()"><span class="cur">₽</span></div></div>
+    <div class="price-field"><label>Цена до</label><div class="input-wrap"><input type="number" id="pMax" placeholder="∞" min="0" inputmode="numeric" oninput="update()"><span class="cur">₽</span></div></div>
   </div>
-  <div class="price-hint">Оставь поле пустым — без ограничения по цене</div>
+  <div class="price-hint">Оставь поле пустым — без ограничения</div>
   <div class="err" id="priceErr">⚠️ Цена «от» не может быть больше «до»</div>
 </div>
 
-<!-- Регион -->
+<!-- Город -->
 <div class="card">
-  <div class="section-label">Регион поиска</div>
-  <select class="city-select" id="city" onchange="update()">
-    <option value="1">🏙️ Москва</option>
-    <option value="2">🏙️ Санкт-Петербург</option>
-    <option value="4593">🌆 Московская область</option>
-    <option value="4588">🌆 Ленинградская область</option>
-  </select>
+  <div class="section-label">Город поиска</div>
+  <div id="cityPicker">
+    <div class="city-search-wrap">
+      <input class="city-search" id="citySearch" placeholder="Поиск города..." oninput="searchCity()" onfocus="showCityList()" onblur="hideCityList()" autocomplete="off">
+      <span class="city-search-icon">🔍</span>
+    </div>
+    <div class="city-list" id="cityList"></div>
+  </div>
+  <div id="citySelected" class="hidden">
+    <div class="city-selected" onclick="clearCity()">
+      <span id="citySelectedText">Москва</span>
+      <span class="clear">✕</span>
+    </div>
+  </div>
 </div>
 
 <!-- Итог -->
@@ -206,149 +164,171 @@
       Нажимая «Начать подбор», я принимаю условия
       <a href="https://YOUR_DOMAIN/docs/offer.html" target="_blank">пользовательского соглашения</a>
       и <a href="https://YOUR_DOMAIN/docs/privacy.html" target="_blank">политики конфиденциальности</a>.
-      Сервис предоставляет помощь в поиске объявлений на основе открытых данных.
     </span>
   </label>
 </div>
 
 <div class="bottom-bar">
-  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>
-    🔍 Выбери параметры
-  </button>
+  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>🔍 Выбери параметры</button>
 </div>
 
 <script>
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#F2F3F5'); tg.setBackgroundColor('#F2F3F5'); }
+if(tg){tg.ready();tg.expand();tg.setHeaderColor('#F2F3F5');tg.setBackgroundColor('#F2F3F5')}
 
-// Состояние
+// Все города РФ с кодами регионов ЦИАН
+const CITIES = [
+  {id:"1",name:"Москва"},{id:"2",name:"Санкт-Петербург"},{id:"4593",name:"Московская область"},
+  {id:"4588",name:"Ленинградская область"},{id:"4530",name:"Новосибирск"},{id:"4612",name:"Екатеринбург"},
+  {id:"4560",name:"Нижний Новгород"},{id:"4568",name:"Казань"},{id:"4608",name:"Челябинск"},
+  {id:"4598",name:"Омск"},{id:"4603",name:"Самара"},{id:"4590",name:"Ростов-на-Дону"},
+  {id:"4596",name:"Уфа"},{id:"4527",name:"Красноярск"},{id:"4519",name:"Воронеж"},
+  {id:"4600",name:"Пермь"},{id:"4524",name:"Волгоград"},{id:"4516",name:"Краснодар"},
+  {id:"4604",name:"Саратов"},{id:"4614",name:"Тюмень"},{id:"4610",name:"Тольятти"},
+  {id:"4533",name:"Ижевск"},{id:"4506",name:"Барнаул"},{id:"4619",name:"Ульяновск"},
+  {id:"4536",name:"Иркутск"},{id:"4534",name:"Хабаровск"},{id:"4628",name:"Ярославль"},
+  {id:"4621",name:"Владивосток"},{id:"4549",name:"Махачкала"},{id:"4615",name:"Томск"},
+  {id:"4599",name:"Оренбург"},{id:"4523",name:"Кемерово"},{id:"4531",name:"Новокузнецк"},
+  {id:"4601",name:"Рязань"},{id:"4505",name:"Астрахань"},{id:"4540",name:"Набережные Челны"},
+  {id:"4579",name:"Пенза"},{id:"4543",name:"Липецк"},{id:"4537",name:"Киров"},
+  {id:"4517",name:"Чебоксары"},{id:"4611",name:"Тула"},{id:"4538",name:"Калининград"},
+  {id:"4507",name:"Балашиха"},{id:"4524",name:"Курск"},{id:"4604",name:"Севастополь"},
+  {id:"4605",name:"Сочи"},{id:"4607",name:"Ставрополь"},{id:"4618",name:"Улан-Удэ"},
+  {id:"4609",name:"Тверь"},{id:"4546",name:"Магнитогорск"},{id:"4510",name:"Брянск"},
+  {id:"4508",name:"Белгород"},{id:"4535",name:"Иваново"},{id:"4622",name:"Владимир"},
+  {id:"4503",name:"Архангельск"},{id:"4515",name:"Чита"},{id:"4625",name:"Якутск"},
+  {id:"4606",name:"Смоленск"},{id:"4623",name:"Вологда"},{id:"4515",name:"Череповец"},
+  {id:"4520",name:"Калуга"},{id:"4576",name:"Орёл"},{id:"4548",name:"Мурманск"},
+  {id:"4606",name:"Сургут"},{id:"4613",name:"Тамбов"},{id:"4529",name:"Нижний Тагил"},
+  {id:"4602",name:"Симферополь"},{id:"4529",name:"Нижневартовск"},{id:"4581",name:"Петрозаводск"},
+  {id:"4522",name:"Кострома"},{id:"4529",name:"Новороссийск"},{id:"4526",name:"Курган"},
+  {id:"4582",name:"Псков"},{id:"4607",name:"Сыктывкар"},{id:"4624",name:"Великий Новгород"},
+  {id:"4521",name:"Комсомольск-на-Амуре"},{id:"4545",name:"Йошкар-Ола"},
+  {id:"4606",name:"Стерлитамак"},{id:"4627",name:"Владикавказ"},{id:"4517",name:"Грозный"},
+  {id:"4580",name:"Петропавловск-Камчатский"},{id:"4606",name:"Южно-Сахалинск"},
+  {id:"4538",name:"Нальчик"},{id:"4504",name:"Майкоп"},{id:"4518",name:"Элиста"},
+  {id:"4503",name:"Анадырь"},{id:"4514",name:"Владикавказ"},{id:"4539",name:"Кострома"},
+];
+
 const state = {
-  propType: 'residential',  // residential | commercial
-  types: { new: false, old: false },
+  propType: 'residential',
+  types: {new:false, old:false},
   rooms: new Set(),
   commTypes: new Set(),
+  cityId: null,
+  cityName: null,
 };
 
-// Переключение жилая/коммерческая
-function setPropType(t) {
-  state.propType = t;
-  document.querySelectorAll('.prop-tab').forEach((b,i) => b.classList.toggle('active', (i===0&&t==='residential')||(i===1&&t==='commercial')));
-  document.getElementById('residentialSection').classList.toggle('hidden', t==='commercial');
-  document.getElementById('commercialSection').classList.toggle('hidden', t==='residential');
-  document.getElementById('roomsCard').classList.toggle('hidden', t==='commercial');
+function setPropType(t){
+  state.propType=t;
+  document.querySelectorAll('.prop-tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&t==='residential')||(i===1&&t==='commercial')));
+  document.getElementById('residentialSection').classList.toggle('hidden',t==='commercial');
+  document.getElementById('commercialSection').classList.toggle('hidden',t==='residential');
+  document.getElementById('roomsCard').classList.toggle('hidden',t==='commercial');
   update();
 }
 
-// Тип жилья
-function toggleType(t) {
-  state.types[t] = !state.types[t];
-  document.querySelector(`[data-type="${t}"]`).classList.toggle('active', state.types[t]);
+function toggleType(t){state.types[t]=!state.types[t];document.querySelector(`[data-type="${t}"]`).classList.toggle('active',state.types[t]);update()}
+function toggleRoom(el){const r=el.dataset.room;if(!r)return;state.rooms.has(r)?state.rooms.delete(r):state.rooms.add(r);el.classList.toggle('active',state.rooms.has(r));update()}
+function selectAll(){const all=state.rooms.size===7;document.querySelectorAll('.room-btn[data-room]').forEach(b=>{all?state.rooms.delete(b.dataset.room):state.rooms.add(b.dataset.room);b.classList.toggle('active',!all)});update()}
+function toggleComm(el){const c=el.dataset.comm;state.commTypes.has(c)?state.commTypes.delete(c):state.commTypes.add(c);el.classList.toggle('active',state.commTypes.has(c));update()}
+
+// Поиск города
+let cityTimeout=null;
+function searchCity(){
+  clearTimeout(cityTimeout);
+  cityTimeout=setTimeout(()=>{
+    const q=document.getElementById('citySearch').value.trim().toLowerCase();
+    renderCityList(q?CITIES.filter(c=>c.name.toLowerCase().includes(q)):CITIES.slice(0,15));
+    document.getElementById('cityList').classList.add('show');
+  },150);
+}
+function showCityList(){
+  const q=document.getElementById('citySearch').value.trim().toLowerCase();
+  renderCityList(q?CITIES.filter(c=>c.name.toLowerCase().includes(q)):CITIES.slice(0,15));
+  document.getElementById('cityList').classList.add('show');
+}
+function hideCityList(){setTimeout(()=>document.getElementById('cityList').classList.remove('show'),200)}
+function renderCityList(cities){
+  document.getElementById('cityList').innerHTML=cities.slice(0,20).map(c=>
+    `<div class="city-item${state.cityId===c.id?' selected':''}" onmousedown="selectCity('${c.id}','${c.name}')">${c.name}</div>`
+  ).join('');
+}
+function selectCity(id,name){
+  state.cityId=id; state.cityName=name;
+  document.getElementById('citySearch').value='';
+  document.getElementById('cityList').classList.remove('show');
+  document.getElementById('cityPicker').classList.add('hidden');
+  document.getElementById('citySelected').classList.remove('hidden');
+  document.getElementById('citySelectedText').textContent=name;
+  update();
+}
+function clearCity(){
+  state.cityId=null; state.cityName=null;
+  document.getElementById('cityPicker').classList.remove('hidden');
+  document.getElementById('citySelected').classList.add('hidden');
+  document.getElementById('citySearch').value='';
   update();
 }
 
-// Комнаты
-function toggleRoom(el) {
-  const r = el.dataset.room;
-  if (!r) return;
-  state.rooms.has(r) ? state.rooms.delete(r) : state.rooms.add(r);
-  el.classList.toggle('active', state.rooms.has(r));
-  update();
-}
-function selectAll() {
-  const all = state.rooms.size === 7;
-  document.querySelectorAll('.room-btn[data-room]').forEach(b => {
-    all ? state.rooms.delete(b.dataset.room) : state.rooms.add(b.dataset.room);
-    b.classList.toggle('active', !all);
-  });
-  update();
-}
-
-// Коммерческая
-function toggleComm(el) {
-  const c = el.dataset.comm;
-  state.commTypes.has(c) ? state.commTypes.delete(c) : state.commTypes.add(c);
-  el.classList.toggle('active', state.commTypes.has(c));
-  update();
-}
-
-function fmt(n) {
-  if (n>=1e6) return (n/1e6).toFixed(n%1e6?1:0)+'млн';
-  if (n>=1e3) return Math.round(n/1e3)+'тыс';
+function fmt(n){
+  if(n>=1e6)return(n/1e6).toFixed(n%1e6?1:0)+'млн';
+  if(n>=1e3)return Math.round(n/1e3)+'тыс';
   return n;
 }
 
-function update() {
-  const min    = parseInt(document.getElementById('pMin').value)||0;
-  const max    = parseInt(document.getElementById('pMax').value)||0;
-  const priceOk = !max||!min||min<=max;
-  const agreed  = document.getElementById('offerCheck').checked;
-
-  let hasSelection = false;
-  if (state.propType==='residential') {
-    hasSelection = (state.types.new||state.types.old) && state.rooms.size>0;
-  } else {
-    hasSelection = state.commTypes.size>0;
+function update(){
+  const min=parseInt(document.getElementById('pMin').value)||0;
+  const max=parseInt(document.getElementById('pMax').value)||0;
+  const priceOk=!max||!min||min<=max;
+  const agreed=document.getElementById('offerCheck').checked;
+  let hasSel=false;
+  if(state.propType==='residential') hasSel=(state.types.new||state.types.old)&&state.rooms.size>0;
+  else hasSel=state.commTypes.size>0;
+  document.getElementById('priceErr').classList.toggle('show',!priceOk);
+  const valid=hasSel&&priceOk&&agreed&&!!state.cityId;
+  const btn=document.getElementById('launchBtn');
+  btn.disabled=!valid;
+  if(!state.cityId) btn.innerHTML='🏙️ Выбери город';
+  else if(!hasSel) btn.innerHTML=state.propType==='residential'?'⚠️ Выбери тип и комнаты':'⚠️ Выбери тип объекта';
+  else if(!priceOk) btn.innerHTML='⚠️ Проверь цены';
+  else if(!agreed) btn.innerHTML='☑️ Подтверди соглашение';
+  else{
+    const cnt=state.propType==='residential'?state.rooms.size:state.commTypes.size;
+    btn.innerHTML=`🚀 Начать подбор <span class="btn-count">${cnt} тип${cnt>1?'а':''}</span>`;
   }
-
-  document.getElementById('priceErr').classList.toggle('show', !priceOk);
-
-  const btn = document.getElementById('launchBtn');
-  const valid = hasSelection && priceOk && agreed;
-  btn.disabled = !valid;
-
-  if (!hasSelection) {
-    btn.innerHTML = state.propType==='residential'
-      ? '⚠️ Выбери тип жилья и комнаты'
-      : '⚠️ Выбери тип объекта';
-  } else if (!priceOk)  btn.innerHTML = '⚠️ Проверь цены';
-  else if (!agreed)     btn.innerHTML = '☑️ Подтверди соглашение';
-  else {
-    const cnt = state.propType==='residential' ? state.rooms.size : state.commTypes.size;
-    btn.innerHTML = `🚀 Начать подбор <span class="btn-count">${cnt} тип${cnt>1?'а':''}</span>`;
-  }
-
-  // Итог
-  if (hasSelection && priceOk) {
-    const cityEl = document.getElementById('city');
-    const city   = cityEl.options[cityEl.selectedIndex].text.slice(3);
-    const price  = min&&max?`${fmt(min)}–${fmt(max)} ₽`:min?`от ${fmt(min)} ₽`:max?`до ${fmt(max)} ₽`:'Любая цена';
-    let chips = [];
-
-    if (state.propType==='residential') {
-      const ttype = state.types.new&&state.types.old?'Новостройка+Вторичка':state.types.new?'Новостройка':'Вторичка';
-      const labels={'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
-      const sel=['9','1','2','3','4','5','6'].filter(r=>state.rooms.has(r)).map(r=>labels[r]);
-      chips = [ttype, sel.join(', '), price, city];
+  if(hasSel&&priceOk&&state.cityId){
+    const price=min&&max?`${fmt(min)}-${fmt(max)} ₽`:min?`от ${fmt(min)} ₽`:max?`до ${fmt(max)} ₽`:'Любая цена';
+    let chips=[];
+    if(state.propType==='residential'){
+      const tt=state.types.new&&state.types.old?'Новостройка+Вторичка':state.types.new?'Новостройка':'Вторичка';
+      const lb={'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
+      const sel=['9','1','2','3','4','5','6'].filter(r=>state.rooms.has(r)).map(r=>lb[r]);
+      chips=[tt,sel.join(', '),price,state.cityName];
     } else {
-      const clabels={office:'Офис',retail:'Торговая',warehouse:'Склад',free:'Своб.назн.',catering:'Общепит',production:'Производство',autoservice:'Автосервис',building:'Здание'};
-      const sel=[...state.commTypes].map(c=>clabels[c]||c);
-      chips = ['Коммерческая', sel.join(', '), price, city];
+      const cl={office:'Офис',retail:'Торговая',warehouse:'Склад',free:'Своб.назн.',catering:'Общепит',production:'Производство',autoservice:'Автосервис',building:'Здание'};
+      chips=['Коммерческая',[...state.commTypes].map(c=>cl[c]||c).join(', '),price,state.cityName];
     }
-
-    document.getElementById('chips').innerHTML = chips.map(t=>`<span class="s-chip">${t}</span>`).join('');
+    document.getElementById('chips').innerHTML=chips.map(t=>`<span class="s-chip">${t}</span>`).join('');
     document.getElementById('summary').classList.add('show');
-  } else {
-    document.getElementById('summary').classList.remove('show');
-  }
+  } else document.getElementById('summary').classList.remove('show');
 }
 
-function launch() {
-  const min = parseInt(document.getElementById('pMin').value)||null;
-  const max = parseInt(document.getElementById('pMax').value)||null;
-  const payload = {
-    prop_type: state.propType,
-    types:     Object.entries(state.types).filter(([,v])=>v).map(([k])=>k),
-    rooms:     [...state.rooms],
+function launch(){
+  const min=parseInt(document.getElementById('pMin').value)||null;
+  const max=parseInt(document.getElementById('pMax').value)||null;
+  const payload={
+    prop_type:state.propType,
+    types:Object.entries(state.types).filter(([,v])=>v).map(([k])=>k),
+    rooms:[...state.rooms],
     comm_types:[...state.commTypes],
-    price_min: min,
-    price_max: max,
-    region:    document.getElementById('city').value,
+    price_min:min, price_max:max,
+    region:state.cityId,
+    city_name:state.cityName,
   };
-  if (tg) tg.sendData(JSON.stringify(payload));
-  else alert(JSON.stringify(payload, null, 2));
+  if(tg)tg.sendData(JSON.stringify(payload));
+  else alert(JSON.stringify(payload,null,2));
 }
-
-// Инициализация — ничего не нажато по умолчанию
 update();
 </script>
 </body>
