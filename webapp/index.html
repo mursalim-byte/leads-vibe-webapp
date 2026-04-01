@@ -1,1 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Leads Vibe — Подбор</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap');
 
+  :root {
+    --bg:         #F2F3F5;
+    --card:       #FFFFFF;
+    --accent:     #E8344A;
+    --blue:       #1A73E8;
+    --text:       #1C1C1E;
+    --muted:      #8E8E93;
+    --border:     #E5E5EA;
+    --active-bg:  #FEF0F2;
+    --radius:     14px;
+    --shadow:     0 2px 12px rgba(0,0,0,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Golos Text', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 12px 12px 130px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 0 16px;
+    animation: fadeUp .3s ease both;
+  }
+  .logo {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #E8344A, #FF6B7A);
+    border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(232,52,74,.3);
+  }
+  .header h1 { font-size: 19px; font-weight: 700; }
+  .header p  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    animation: fadeUp .3s ease both;
+  }
+  .card:nth-child(2){animation-delay:.06s}
+  .card:nth-child(3){animation-delay:.12s}
+  .card:nth-child(4){animation-delay:.18s}
+  .card:nth-child(5){animation-delay:.24s}
+
+  .section-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: .9px;
+    margin-bottom: 12px;
+  }
+
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .type-btn {
+    padding: 12px 8px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    cursor: pointer; text-align: center;
+    transition: all .15s; user-select: none;
+  }
+  .type-btn .t-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .type-btn .t-name { font-size: 13px; font-weight: 600; }
+  .type-btn .t-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .type-btn.active  { border-color: var(--accent); background: var(--active-bg); }
+  .type-btn.active .t-name { color: var(--accent); }
+
+  .rooms-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+  .room-btn {
+    padding: 10px 4px;
+    border: 2px solid var(--border);
+    border-radius: 12px; background: var(--card);
+    cursor: pointer; text-align: center;
+    transition: all .15s;
+    font-family: 'Golos Text', sans-serif;
+    user-select: none;
+  }
+  .room-btn .r-icon  { font-size: 17px; display: block; }
+  .room-btn .r-label { font-size: 12px; font-weight: 600; margin-top: 3px; }
+  .room-btn.active   { border-color: var(--accent); background: var(--active-bg); color: var(--accent); }
+
+  .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .price-field label {
+    display: block; font-size: 11px; font-weight: 600;
+    color: var(--muted); text-transform: uppercase; letter-spacing: .6px;
+    margin-bottom: 6px;
+  }
+  .input-wrap { position: relative; }
+  .input-wrap input {
+    width: 100%; padding: 11px 32px 11px 12px;
+    border: 2px solid var(--border); border-radius: 10px;
+    font-family: 'Golos Text', sans-serif;
+    font-size: 15px; font-weight: 500; color: var(--text);
+    background: var(--bg); outline: none;
+    transition: border-color .15s; -webkit-appearance: none;
+  }
+  .input-wrap input:focus { border-color: var(--blue); background: #fff; }
+  .input-wrap .cur {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; color: var(--muted); font-weight: 600; pointer-events: none;
+  }
+  .price-hint { font-size: 11px; color: var(--muted); margin-top: 8px; text-align: center; }
+  .err { color: var(--accent); font-size: 12px; margin-top: 6px; display: none; }
+  .err.show { display: block; }
+
+  .city-select {
+    width: 100%; padding: 12px 36px 12px 14px;
+    border: 2px solid var(--border); border-radius: 10px;
+    font-family: 'Golos Text', sans-serif;
+    font-size: 15px; font-weight: 500; color: var(--text);
+    background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    -webkit-appearance: none; outline: none; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .city-select:focus { border-color: var(--blue); background-color: #fff; }
+
+  .summary {
+    background: linear-gradient(135deg,#1A73E8,#0D47A1);
+    border-radius: var(--radius); padding: 14px 16px;
+    margin-bottom: 10px; color: #fff;
+    display: none; animation: fadeUp .25s ease;
+  }
+  .summary.show { display: block; }
+  .summary-title { font-size: 11px; font-weight: 600; opacity: .8; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 8px; }
+  .summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .s-chip { background: rgba(255,255,255,.2); border-radius: 20px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
+
+  .offer-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 14px 16px; margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    animation: fadeUp .3s ease .28s both;
+  }
+  .offer-row { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+  .offer-row input[type="checkbox"] {
+    width: 20px; height: 20px; min-width: 20px;
+    accent-color: var(--accent); cursor: pointer; margin-top: 2px;
+  }
+  .offer-text { font-size: 12px; line-height: 1.6; color: var(--muted); user-select: none; }
+  .offer-text a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 10px 16px max(12px, env(safe-area-inset-bottom));
+    background: rgba(242,243,245,.96);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border); z-index: 10;
+  }
+  .launch-btn {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: var(--accent); color: #fff;
+    font-family: 'Golos Text', sans-serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform .1s, opacity .1s;
+    box-shadow: 0 4px 18px rgba(232,52,74,.4);
+  }
+  .launch-btn:active { transform: scale(.97); }
+  .launch-btn:disabled { background: #C7C7CC; box-shadow: none; cursor: not-allowed; }
+  .btn-count { background: rgba(255,255,255,.25); border-radius: 20px; padding: 2px 8px; font-size: 13px; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">🏢</div>
+  <div>
+    <h1>Leads Vibe</h1>
+    <p>Настрой параметры подбора</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">Тип жилья</div>
+  <div class="type-grid">
+    <div class="type-btn active" data-type="new" onclick="toggleType('new')">
+      <span class="t-icon">🏗️</span>
+      <div class="t-name">Новостройка</div>
+      <div class="t-sub">от застройщика</div>
+    </div>
+    <div class="type-btn active" data-type="old" onclick="toggleType('old')">
+      <span class="t-icon">🏠</span>
+      <div class="t-name">Вторичка</div>
+      <div class="t-sub">готовое жильё</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">Количество комнат</div>
+  <div class="rooms-grid">
+    <div class="room-btn" data-room="9"  onclick="toggleRoom(this)"><span class="r-icon">🔲</span><div class="r-label">Студия</div></div>
+    <div class="room-btn" data-room="1"  onclick="toggleRoom(this)"><span class="r-icon">1️⃣</span><div class="r-label">1К</div></div>
+    <div class="room-btn" data-room="2"  onclick="toggleRoom(this)"><span class="r-icon">2️⃣</span><div class="r-label">2К</div></div>
+    <div class="room-btn" data-room="3"  onclick="toggleRoom(this)"><span class="r-icon">3️⃣</span><div class="r-label">3К</div></div>
+    <div class="room-btn" data-room="4"  onclick="toggleRoom(this)"><span class="r-icon">4️⃣</span><div class="r-label">4К</div></div>
+    <div class="room-btn" data-room="5"  onclick="toggleRoom(this)"><span class="r-icon">5️⃣</span><div class="r-label">5К</div></div>
+    <div class="room-btn" data-room="6"  onclick="toggleRoom(this)"><span class="r-icon">🔑</span><div class="r-label">6К+</div></div>
+    <div class="room-btn"               onclick="selectAll()">      <span class="r-icon">✨</span><div class="r-label">Все</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">Бюджет</div>
+  <div class="price-row">
+    <div class="price-field">
+      <label>Цена от</label>
+      <div class="input-wrap">
+        <input type="number" id="pMin" placeholder="0" min="0" inputmode="numeric" oninput="update()">
+        <span class="cur">₽</span>
+      </div>
+    </div>
+    <div class="price-field">
+      <label>Цена до</label>
+      <div class="input-wrap">
+        <input type="number" id="pMax" placeholder="∞" min="0" inputmode="numeric" oninput="update()">
+        <span class="cur">₽</span>
+      </div>
+    </div>
+  </div>
+  <div class="price-hint">Оставь поле пустым — без ограничения по цене</div>
+  <div class="err" id="priceErr">⚠️ Цена «от» не может быть больше «до»</div>
+</div>
+
+<div class="card">
+  <div class="section-label">Регион поиска</div>
+  <select class="city-select" id="city" onchange="update()">
+    <option value="1">🏙️ Москва</option>
+    <option value="2">🏙️ Санкт-Петербург</option>
+    <option value="4593">🌆 Московская область</option>
+    <option value="4588">🌆 Ленинградская область</option>
+  </select>
+</div>
+
+<div class="summary" id="summary">
+  <div class="summary-title">📋 Параметры подбора</div>
+  <div class="summary-chips" id="chips"></div>
+</div>
+
+<div class="offer-card">
+  <label class="offer-row">
+    <input type="checkbox" id="offerCheck" onchange="update()">
+    <span class="offer-text">
+      Нажимая «Начать подбор», я принимаю условия
+      <a href="https://YOUR_DOMAIN/docs/offer.html" target="_blank">пользовательского соглашения</a>
+      и <a href="https://YOUR_DOMAIN/docs/privacy.html" target="_blank">политики конфиденциальности</a>.
+      Сервис предоставляет помощь в поиске объявлений на основе открытых данных.
+    </span>
+  </label>
+</div>
+
+<div class="bottom-bar">
+  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>
+    🔍 Выбери параметры
+  </button>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#F2F3F5'); tg.setBackgroundColor('#F2F3F5'); }
+
+const state = { types: { new: true, old: true }, rooms: new Set() };
+
+function toggleType(t) {
+  state.types[t] = !state.types[t];
+  document.querySelector(`[data-type="${t}"]`).classList.toggle('active', state.types[t]);
+  update();
+}
+
+function toggleRoom(el) {
+  const r = el.dataset.room;
+  if (!r) return;
+  state.rooms.has(r) ? state.rooms.delete(r) : state.rooms.add(r);
+  el.classList.toggle('active', state.rooms.has(r));
+  update();
+}
+
+function selectAll() {
+  const all = state.rooms.size === 7;
+  document.querySelectorAll('.room-btn[data-room]').forEach(b => {
+    all ? state.rooms.delete(b.dataset.room) : state.rooms.add(b.dataset.room);
+    b.classList.toggle('active', !all);
+  });
+  update();
+}
+
+function fmt(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(n%1e6 ? 1 : 0) + 'млн';
+  if (n >= 1e3) return Math.round(n/1e3) + 'тыс';
+  return n;
+}
+
+function update() {
+  const min = parseInt(document.getElementById('pMin').value) || 0;
+  const max = parseInt(document.getElementById('pMax').value) || 0;
+  const hasTypes = state.types.new || state.types.old;
+  const hasRooms = state.rooms.size > 0;
+  const priceOk  = !max || !min || min <= max;
+  const agreed   = document.getElementById('offerCheck').checked;
+  const valid    = hasTypes && hasRooms && priceOk && agreed;
+
+  document.getElementById('priceErr').classList.toggle('show', !priceOk);
+
+  const btn = document.getElementById('launchBtn');
+  btn.disabled = !valid;
+
+  if (!hasTypes)       btn.innerHTML = '⚠️ Выбери тип жилья';
+  else if (!hasRooms)  btn.innerHTML = '⚠️ Выбери количество комнат';
+  else if (!priceOk)   btn.innerHTML = '⚠️ Проверь цены';
+  else if (!agreed)    btn.innerHTML = '☑️ Подтверди соглашение';
+  else {
+    const labels = {'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
+    const sel = ['9','1','2','3','4','5','6'].filter(r => state.rooms.has(r)).map(r => labels[r]);
+    btn.innerHTML = `🚀 Начать подбор <span class="btn-count">${sel.length} тип${sel.length > 1 ? 'а' : ''}</span>`;
+  }
+
+  if (hasTypes && hasRooms && priceOk) {
+    const labels = {'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
+    const sel    = ['9','1','2','3','4','5','6'].filter(r => state.rooms.has(r)).map(r => labels[r]);
+    const ttype  = state.types.new && state.types.old ? 'Новостройка + Вторичка'
+                 : state.types.new ? 'Новостройка' : 'Вторичка';
+    const cityEl = document.getElementById('city');
+    const city   = cityEl.options[cityEl.selectedIndex].text.slice(3);
+    const price  = min && max ? `${fmt(min)} – ${fmt(max)} ₽`
+                 : min ? `от ${fmt(min)} ₽` : max ? `до ${fmt(max)} ₽` : 'Любая цена';
+    document.getElementById('chips').innerHTML =
+      [ttype, sel.join(', '), price, city].map(t => `<span class="s-chip">${t}</span>`).join('');
+    document.getElementById('summary').classList.add('show');
+  } else {
+    document.getElementById('summary').classList.remove('show');
+  }
+}
+
+function launch() {
+  const min = parseInt(document.getElementById('pMin').value) || null;
+  const max = parseInt(document.getElementById('pMax').value) || null;
+  const payload = {
+    types:     Object.entries(state.types).filter(([,v]) => v).map(([k]) => k),
+    rooms:     [...state.rooms],
+    price_min: min,
+    price_max: max,
+    region:    document.getElementById('city').value,
+  };
+  if (tg) tg.sendData(JSON.stringify(payload));
+  else alert(JSON.stringify(payload, null, 2));
+}
+</script>
+</body>
+</html>
