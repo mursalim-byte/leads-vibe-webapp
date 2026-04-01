@@ -7,209 +7,144 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap');
-
   :root {
-    --bg:         #F2F3F5;
-    --card:       #FFFFFF;
-    --accent:     #E8344A;
-    --blue:       #1A73E8;
-    --text:       #1C1C1E;
-    --muted:      #8E8E93;
-    --border:     #E5E5EA;
-    --active-bg:  #FEF0F2;
-    --radius:     14px;
-    --shadow:     0 2px 12px rgba(0,0,0,0.07);
+    --bg:#F2F3F5; --card:#FFFFFF; --accent:#E8344A; --blue:#1A73E8;
+    --text:#1C1C1E; --muted:#8E8E93; --border:#E5E5EA;
+    --active-bg:#FEF0F2; --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.07);
   }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Golos Text',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:12px 12px 130px;-webkit-font-smoothing:antialiased}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  .header{display:flex;align-items:center;gap:10px;padding:4px 0 16px;animation:fadeUp .3s ease both}
+  .logo{width:42px;height:42px;background:linear-gradient(135deg,#E8344A,#FF6B7A);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(232,52,74,.3)}
+  .header h1{font-size:19px;font-weight:700}
+  .header p{font-size:12px;color:var(--muted);margin-top:1px}
 
-  body {
-    font-family: 'Golos Text', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 12px 12px 130px;
-    -webkit-font-smoothing: antialiased;
-  }
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease both}
+  .card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.10s}
+  .card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.20s}
+  .card:nth-child(6){animation-delay:.25s}
 
-  .header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 4px 0 16px;
-    animation: fadeUp .3s ease both;
-  }
-  .logo {
-    width: 42px; height: 42px;
-    background: linear-gradient(135deg, #E8344A, #FF6B7A);
-    border-radius: 13px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 4px 12px rgba(232,52,74,.3);
-  }
-  .header h1 { font-size: 19px; font-weight: 700; }
-  .header p  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .section-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:12px}
 
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    animation: fadeUp .3s ease both;
-  }
-  .card:nth-child(2){animation-delay:.06s}
-  .card:nth-child(3){animation-delay:.12s}
-  .card:nth-child(4){animation-delay:.18s}
-  .card:nth-child(5){animation-delay:.24s}
+  /* Тип недвижимости — переключатель */
+  .prop-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--border);border-radius:12px;padding:4px;margin-bottom:12px}
+  .prop-tab{padding:9px;border:none;border-radius:9px;background:transparent;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center}
+  .prop-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,0.1)}
 
-  .section-label {
-    font-size: 11px; font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase; letter-spacing: .9px;
-    margin-bottom: 12px;
-  }
+  /* Тип жилья */
+  .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .type-btn{padding:12px 8px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+  .type-btn .t-icon{font-size:22px;display:block;margin-bottom:4px}
+  .type-btn .t-name{font-size:13px;font-weight:600}
+  .type-btn .t-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .type-btn.active{border-color:var(--accent);background:var(--active-bg)}
+  .type-btn.active .t-name{color:var(--accent)}
 
-  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .type-btn {
-    padding: 12px 8px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    background: var(--card);
-    cursor: pointer; text-align: center;
-    transition: all .15s; user-select: none;
-  }
-  .type-btn .t-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-  .type-btn .t-name { font-size: 13px; font-weight: 600; }
-  .type-btn .t-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .type-btn.active  { border-color: var(--accent); background: var(--active-bg); }
-  .type-btn.active .t-name { color: var(--accent); }
+  /* Коммерческая */
+  .comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .comm-btn{padding:10px 8px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+  .comm-btn .c-icon{font-size:18px;display:block;margin-bottom:3px}
+  .comm-btn .c-name{font-size:12px;font-weight:600}
+  .comm-btn.active{border-color:var(--accent);background:var(--active-bg);color:var(--accent)}
 
-  .rooms-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
-  .room-btn {
-    padding: 10px 4px;
-    border: 2px solid var(--border);
-    border-radius: 12px; background: var(--card);
-    cursor: pointer; text-align: center;
-    transition: all .15s;
-    font-family: 'Golos Text', sans-serif;
-    user-select: none;
-  }
-  .room-btn .r-icon  { font-size: 17px; display: block; }
-  .room-btn .r-label { font-size: 12px; font-weight: 600; margin-top: 3px; }
-  .room-btn.active   { border-color: var(--accent); background: var(--active-bg); color: var(--accent); }
+  /* Комнаты */
+  .rooms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+  .room-btn{padding:10px 4px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;transition:all .15s;font-family:'Golos Text',sans-serif;user-select:none}
+  .room-btn .r-icon{font-size:17px;display:block}
+  .room-btn .r-label{font-size:12px;font-weight:600;margin-top:3px}
+  .room-btn.active{border-color:var(--accent);background:var(--active-bg);color:var(--accent)}
 
-  .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .price-field label {
-    display: block; font-size: 11px; font-weight: 600;
-    color: var(--muted); text-transform: uppercase; letter-spacing: .6px;
-    margin-bottom: 6px;
-  }
-  .input-wrap { position: relative; }
-  .input-wrap input {
-    width: 100%; padding: 11px 32px 11px 12px;
-    border: 2px solid var(--border); border-radius: 10px;
-    font-family: 'Golos Text', sans-serif;
-    font-size: 15px; font-weight: 500; color: var(--text);
-    background: var(--bg); outline: none;
-    transition: border-color .15s; -webkit-appearance: none;
-  }
-  .input-wrap input:focus { border-color: var(--blue); background: #fff; }
-  .input-wrap .cur {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    font-size: 14px; color: var(--muted); font-weight: 600; pointer-events: none;
-  }
-  .price-hint { font-size: 11px; color: var(--muted); margin-top: 8px; text-align: center; }
-  .err { color: var(--accent); font-size: 12px; margin-top: 6px; display: none; }
-  .err.show { display: block; }
+  /* Бюджет */
+  .price-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .price-field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+  .input-wrap{position:relative}
+  .input-wrap input{width:100%;padding:11px 32px 11px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:500;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s;-webkit-appearance:none}
+  .input-wrap input:focus{border-color:var(--blue);background:#fff}
+  .input-wrap .cur{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);font-weight:600;pointer-events:none}
+  .price-hint{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
+  .err{color:var(--accent);font-size:12px;margin-top:6px;display:none}
+  .err.show{display:block}
 
-  .city-select {
-    width: 100%; padding: 12px 36px 12px 14px;
-    border: 2px solid var(--border); border-radius: 10px;
-    font-family: 'Golos Text', sans-serif;
-    font-size: 15px; font-weight: 500; color: var(--text);
-    background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
-    -webkit-appearance: none; outline: none; cursor: pointer;
-    transition: border-color .15s;
-  }
-  .city-select:focus { border-color: var(--blue); background-color: #fff; }
+  /* Регион */
+  .city-select{width:100%;padding:12px 36px 12px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Golos Text',sans-serif;font-size:15px;font-weight:500;color:var(--text);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;outline:none;cursor:pointer;transition:border-color .15s}
+  .city-select:focus{border-color:var(--blue);background-color:#fff}
 
-  .summary {
-    background: linear-gradient(135deg,#1A73E8,#0D47A1);
-    border-radius: var(--radius); padding: 14px 16px;
-    margin-bottom: 10px; color: #fff;
-    display: none; animation: fadeUp .25s ease;
-  }
-  .summary.show { display: block; }
-  .summary-title { font-size: 11px; font-weight: 600; opacity: .8; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 8px; }
-  .summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .s-chip { background: rgba(255,255,255,.2); border-radius: 20px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
+  /* Итог */
+  .summary{background:linear-gradient(135deg,#1A73E8,#0D47A1);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;color:#fff;display:none;animation:fadeUp .25s ease}
+  .summary.show{display:block}
+  .summary-title{font-size:11px;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+  .summary-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .s-chip{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
 
-  .offer-card {
-    background: var(--card); border-radius: var(--radius);
-    padding: 14px 16px; margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    animation: fadeUp .3s ease .28s both;
-  }
-  .offer-row { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
-  .offer-row input[type="checkbox"] {
-    width: 20px; height: 20px; min-width: 20px;
-    accent-color: var(--accent); cursor: pointer; margin-top: 2px;
-  }
-  .offer-text { font-size: 12px; line-height: 1.6; color: var(--muted); user-select: none; }
-  .offer-text a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+  /* Оферта */
+  .offer-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease .28s both}
+  .offer-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
+  .offer-row input[type="checkbox"]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
+  .offer-text{font-size:12px;line-height:1.6;color:var(--muted);user-select:none}
+  .offer-text a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
 
-  .bottom-bar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    padding: 10px 16px max(12px, env(safe-area-inset-bottom));
-    background: rgba(242,243,245,.96);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border); z-index: 10;
-  }
-  .launch-btn {
-    width: 100%; padding: 15px; border: none; border-radius: 14px;
-    background: var(--accent); color: #fff;
-    font-family: 'Golos Text', sans-serif;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: transform .1s, opacity .1s;
-    box-shadow: 0 4px 18px rgba(232,52,74,.4);
-  }
-  .launch-btn:active { transform: scale(.97); }
-  .launch-btn:disabled { background: #C7C7CC; box-shadow: none; cursor: not-allowed; }
-  .btn-count { background: rgba(255,255,255,.25); border-radius: 20px; padding: 2px 8px; font-size: 13px; }
+  /* Кнопка */
+  .bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:10px 16px max(12px,env(safe-area-inset-bottom));background:rgba(242,243,245,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:10}
+  .launch-btn{width:100%;padding:15px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-family:'Golos Text',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s,opacity .1s;box-shadow:0 4px 18px rgba(232,52,74,.4)}
+  .launch-btn:active{transform:scale(.97)}
+  .launch-btn:disabled{background:#C7C7CC;box-shadow:none;cursor:not-allowed}
+  .btn-count{background:rgba(255,255,255,.25);border-radius:20px;padding:2px 8px;font-size:13px}
 
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(10px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+  .hidden{display:none!important}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="logo">🏢</div>
-  <div>
-    <h1>Leads Vibe</h1>
-    <p>Настрой параметры подбора</p>
+  <div><h1>Leads Vibe</h1><p>Настрой параметры подбора</p></div>
+</div>
+
+<!-- Жилая / Коммерческая -->
+<div class="card">
+  <div class="section-label">Тип недвижимости</div>
+  <div class="prop-tabs">
+    <button class="prop-tab active" onclick="setPropType('residential')">🏠 Жилая</button>
+    <button class="prop-tab" onclick="setPropType('commercial')">🏢 Коммерческая</button>
+  </div>
+
+  <!-- Жилая -->
+  <div id="residentialSection">
+    <div class="section-label" style="margin-top:4px">Тип жилья</div>
+    <div class="type-grid">
+      <div class="type-btn" data-type="new" onclick="toggleType('new')">
+        <span class="t-icon">🏗️</span>
+        <div class="t-name">Новостройка</div>
+        <div class="t-sub">от застройщика</div>
+      </div>
+      <div class="type-btn" data-type="old" onclick="toggleType('old')">
+        <span class="t-icon">🏠</span>
+        <div class="t-name">Вторичка</div>
+        <div class="t-sub">готовое жильё</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Коммерческая -->
+  <div id="commercialSection" class="hidden">
+    <div class="section-label" style="margin-top:4px">Тип объекта</div>
+    <div class="comm-grid">
+      <div class="comm-btn" data-comm="office" onclick="toggleComm(this)"><span class="c-icon">🏢</span><div class="c-name">Офис</div></div>
+      <div class="comm-btn" data-comm="retail" onclick="toggleComm(this)"><span class="c-icon">🛍️</span><div class="c-name">Торговая площадь</div></div>
+      <div class="comm-btn" data-comm="warehouse" onclick="toggleComm(this)"><span class="c-icon">📦</span><div class="c-name">Склад</div></div>
+      <div class="comm-btn" data-comm="free" onclick="toggleComm(this)"><span class="c-icon">🔑</span><div class="c-name">Своб. назначения</div></div>
+      <div class="comm-btn" data-comm="catering" onclick="toggleComm(this)"><span class="c-icon">🍽️</span><div class="c-name">Общепит</div></div>
+      <div class="comm-btn" data-comm="production" onclick="toggleComm(this)"><span class="c-icon">🏭</span><div class="c-name">Производство</div></div>
+      <div class="comm-btn" data-comm="autoservice" onclick="toggleComm(this)"><span class="c-icon">🚗</span><div class="c-name">Автосервис</div></div>
+      <div class="comm-btn" data-comm="building" onclick="toggleComm(this)"><span class="c-icon">🏛️</span><div class="c-name">Здание</div></div>
+    </div>
   </div>
 </div>
 
-<div class="card">
-  <div class="section-label">Тип жилья</div>
-  <div class="type-grid">
-    <div class="type-btn active" data-type="new" onclick="toggleType('new')">
-      <span class="t-icon">🏗️</span>
-      <div class="t-name">Новостройка</div>
-      <div class="t-sub">от застройщика</div>
-    </div>
-    <div class="type-btn active" data-type="old" onclick="toggleType('old')">
-      <span class="t-icon">🏠</span>
-      <div class="t-name">Вторичка</div>
-      <div class="t-sub">готовое жильё</div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
+<!-- Комнаты (только для жилой) -->
+<div class="card" id="roomsCard">
   <div class="section-label">Количество комнат</div>
   <div class="rooms-grid">
     <div class="room-btn" data-room="9"  onclick="toggleRoom(this)"><span class="r-icon">🔲</span><div class="r-label">Студия</div></div>
@@ -223,6 +158,7 @@
   </div>
 </div>
 
+<!-- Бюджет -->
 <div class="card">
   <div class="section-label">Бюджет</div>
   <div class="price-row">
@@ -245,6 +181,7 @@
   <div class="err" id="priceErr">⚠️ Цена «от» не может быть больше «до»</div>
 </div>
 
+<!-- Регион -->
 <div class="card">
   <div class="section-label">Регион поиска</div>
   <select class="city-select" id="city" onchange="update()">
@@ -255,14 +192,16 @@
   </select>
 </div>
 
+<!-- Итог -->
 <div class="summary" id="summary">
   <div class="summary-title">📋 Параметры подбора</div>
   <div class="summary-chips" id="chips"></div>
 </div>
 
+<!-- Оферта -->
 <div class="offer-card">
   <label class="offer-row">
-    <input type="checkbox" id="offerCheck" onchange="update()">
+    <input type="checkbox" id="offerCheck" checked onchange="update()">
     <span class="offer-text">
       Нажимая «Начать подбор», я принимаю условия
       <a href="https://YOUR_DOMAIN/docs/offer.html" target="_blank">пользовательского соглашения</a>
@@ -282,14 +221,32 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#F2F3F5'); tg.setBackgroundColor('#F2F3F5'); }
 
-const state = { types: { new: true, old: true }, rooms: new Set() };
+// Состояние
+const state = {
+  propType: 'residential',  // residential | commercial
+  types: { new: false, old: false },
+  rooms: new Set(),
+  commTypes: new Set(),
+};
 
+// Переключение жилая/коммерческая
+function setPropType(t) {
+  state.propType = t;
+  document.querySelectorAll('.prop-tab').forEach((b,i) => b.classList.toggle('active', (i===0&&t==='residential')||(i===1&&t==='commercial')));
+  document.getElementById('residentialSection').classList.toggle('hidden', t==='commercial');
+  document.getElementById('commercialSection').classList.toggle('hidden', t==='residential');
+  document.getElementById('roomsCard').classList.toggle('hidden', t==='commercial');
+  update();
+}
+
+// Тип жилья
 function toggleType(t) {
   state.types[t] = !state.types[t];
   document.querySelector(`[data-type="${t}"]`).classList.toggle('active', state.types[t]);
   update();
 }
 
+// Комнаты
 function toggleRoom(el) {
   const r = el.dataset.room;
   if (!r) return;
@@ -297,7 +254,6 @@ function toggleRoom(el) {
   el.classList.toggle('active', state.rooms.has(r));
   update();
 }
-
 function selectAll() {
   const all = state.rooms.size === 7;
   document.querySelectorAll('.room-btn[data-room]').forEach(b => {
@@ -307,47 +263,69 @@ function selectAll() {
   update();
 }
 
+// Коммерческая
+function toggleComm(el) {
+  const c = el.dataset.comm;
+  state.commTypes.has(c) ? state.commTypes.delete(c) : state.commTypes.add(c);
+  el.classList.toggle('active', state.commTypes.has(c));
+  update();
+}
+
 function fmt(n) {
-  if (n >= 1e6) return (n/1e6).toFixed(n%1e6 ? 1 : 0) + 'млн';
-  if (n >= 1e3) return Math.round(n/1e3) + 'тыс';
+  if (n>=1e6) return (n/1e6).toFixed(n%1e6?1:0)+'млн';
+  if (n>=1e3) return Math.round(n/1e3)+'тыс';
   return n;
 }
 
 function update() {
-  const min = parseInt(document.getElementById('pMin').value) || 0;
-  const max = parseInt(document.getElementById('pMax').value) || 0;
-  const hasTypes = state.types.new || state.types.old;
-  const hasRooms = state.rooms.size > 0;
-  const priceOk  = !max || !min || min <= max;
-  const agreed   = document.getElementById('offerCheck').checked;
-  const valid    = hasTypes && hasRooms && priceOk && agreed;
+  const min    = parseInt(document.getElementById('pMin').value)||0;
+  const max    = parseInt(document.getElementById('pMax').value)||0;
+  const priceOk = !max||!min||min<=max;
+  const agreed  = document.getElementById('offerCheck').checked;
+
+  let hasSelection = false;
+  if (state.propType==='residential') {
+    hasSelection = (state.types.new||state.types.old) && state.rooms.size>0;
+  } else {
+    hasSelection = state.commTypes.size>0;
+  }
 
   document.getElementById('priceErr').classList.toggle('show', !priceOk);
 
   const btn = document.getElementById('launchBtn');
+  const valid = hasSelection && priceOk && agreed;
   btn.disabled = !valid;
 
-  if (!hasTypes)       btn.innerHTML = '⚠️ Выбери тип жилья';
-  else if (!hasRooms)  btn.innerHTML = '⚠️ Выбери количество комнат';
-  else if (!priceOk)   btn.innerHTML = '⚠️ Проверь цены';
-  else if (!agreed)    btn.innerHTML = '☑️ Подтверди соглашение';
+  if (!hasSelection) {
+    btn.innerHTML = state.propType==='residential'
+      ? '⚠️ Выбери тип жилья и комнаты'
+      : '⚠️ Выбери тип объекта';
+  } else if (!priceOk)  btn.innerHTML = '⚠️ Проверь цены';
+  else if (!agreed)     btn.innerHTML = '☑️ Подтверди соглашение';
   else {
-    const labels = {'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
-    const sel = ['9','1','2','3','4','5','6'].filter(r => state.rooms.has(r)).map(r => labels[r]);
-    btn.innerHTML = `🚀 Начать подбор <span class="btn-count">${sel.length} тип${sel.length > 1 ? 'а' : ''}</span>`;
+    const cnt = state.propType==='residential' ? state.rooms.size : state.commTypes.size;
+    btn.innerHTML = `🚀 Начать подбор <span class="btn-count">${cnt} тип${cnt>1?'а':''}</span>`;
   }
 
-  if (hasTypes && hasRooms && priceOk) {
-    const labels = {'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
-    const sel    = ['9','1','2','3','4','5','6'].filter(r => state.rooms.has(r)).map(r => labels[r]);
-    const ttype  = state.types.new && state.types.old ? 'Новостройка + Вторичка'
-                 : state.types.new ? 'Новостройка' : 'Вторичка';
+  // Итог
+  if (hasSelection && priceOk) {
     const cityEl = document.getElementById('city');
     const city   = cityEl.options[cityEl.selectedIndex].text.slice(3);
-    const price  = min && max ? `${fmt(min)} – ${fmt(max)} ₽`
-                 : min ? `от ${fmt(min)} ₽` : max ? `до ${fmt(max)} ₽` : 'Любая цена';
-    document.getElementById('chips').innerHTML =
-      [ttype, sel.join(', '), price, city].map(t => `<span class="s-chip">${t}</span>`).join('');
+    const price  = min&&max?`${fmt(min)}–${fmt(max)} ₽`:min?`от ${fmt(min)} ₽`:max?`до ${fmt(max)} ₽`:'Любая цена';
+    let chips = [];
+
+    if (state.propType==='residential') {
+      const ttype = state.types.new&&state.types.old?'Новостройка+Вторичка':state.types.new?'Новостройка':'Вторичка';
+      const labels={'9':'Студия','1':'1К','2':'2К','3':'3К','4':'4К','5':'5К','6':'6К+'};
+      const sel=['9','1','2','3','4','5','6'].filter(r=>state.rooms.has(r)).map(r=>labels[r]);
+      chips = [ttype, sel.join(', '), price, city];
+    } else {
+      const clabels={office:'Офис',retail:'Торговая',warehouse:'Склад',free:'Своб.назн.',catering:'Общепит',production:'Производство',autoservice:'Автосервис',building:'Здание'};
+      const sel=[...state.commTypes].map(c=>clabels[c]||c);
+      chips = ['Коммерческая', sel.join(', '), price, city];
+    }
+
+    document.getElementById('chips').innerHTML = chips.map(t=>`<span class="s-chip">${t}</span>`).join('');
     document.getElementById('summary').classList.add('show');
   } else {
     document.getElementById('summary').classList.remove('show');
@@ -355,11 +333,13 @@ function update() {
 }
 
 function launch() {
-  const min = parseInt(document.getElementById('pMin').value) || null;
-  const max = parseInt(document.getElementById('pMax').value) || null;
+  const min = parseInt(document.getElementById('pMin').value)||null;
+  const max = parseInt(document.getElementById('pMax').value)||null;
   const payload = {
-    types:     Object.entries(state.types).filter(([,v]) => v).map(([k]) => k),
+    prop_type: state.propType,
+    types:     Object.entries(state.types).filter(([,v])=>v).map(([k])=>k),
     rooms:     [...state.rooms],
+    comm_types:[...state.commTypes],
     price_min: min,
     price_max: max,
     region:    document.getElementById('city').value,
@@ -367,6 +347,9 @@ function launch() {
   if (tg) tg.sendData(JSON.stringify(payload));
   else alert(JSON.stringify(payload, null, 2));
 }
+
+// Инициализация — ничего не нажато по умолчанию
+update();
 </script>
 </body>
 </html>
