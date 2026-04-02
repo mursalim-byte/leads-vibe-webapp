@@ -134,7 +134,8 @@
 
 <!-- Город -->
 <div class="card">
-  <div class="section-label">Город поиска</div>
+  <div class="section-label">Параметры поискового запроса для мониторинга</div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Регион поиска</div>
   <div id="cityPicker">
     <div class="city-search-wrap">
       <input class="city-search" id="citySearch" placeholder="Поиск города..." oninput="searchCity()" onfocus="showCityList()" onblur="hideCityList()" autocomplete="off">
@@ -288,7 +289,7 @@ function update(){
   const btn=document.getElementById('launchBtn');
   btn.disabled=!valid;
   if(!state.cityId) btn.innerHTML='🏙️ Выбери город';
-  else if(!hasSel) btn.innerHTML=state.propType==='residential'?'⚠️ Выбери тип и комнаты':'⚠️ Выбери тип объекта';
+  else if(!hasSel) btn.innerHTML=state.propType==='residential'?'⚠️ Укажите тип и комнаты':'⚠️ Укажите тип объекта';
   else if(!priceOk) btn.innerHTML='⚠️ Проверь цены';
   else if(!agreed) btn.innerHTML='☑️ Подтверди соглашение';
   else{
