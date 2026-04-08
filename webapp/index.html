@@ -68,6 +68,23 @@
   .source-badge{font-size:11px;padding:2px 8px;border-radius:20px}
   .active-badge{background:rgba(42,171,238,.15);color:#1a8ab8}
   .dev-badge{background:rgba(150,150,150,.15);color:#888}
+  /* Скрейпер */
+  .mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
+  .mode-tab{padding:10px;border:none;border-radius:9px;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center}
+  .mode-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,.1)}
+  .scraper-section{display:none}.scraper-section.show{display:block}
+  .realty-section{display:block}.realty-section.hidden-mode{display:none}
+  .scraper-hero{background:linear-gradient(135deg,#1A73E8,#0D47A1);border-radius:14px;padding:18px;color:#fff;margin-bottom:12px}
+  .scraper-hero h2{font-size:16px;font-weight:700;margin-bottom:6px}
+  .scraper-hero p{font-size:12px;opacity:.85;line-height:1.6}
+  .step-list{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+  .step-item{display:flex;align-items:flex-start;gap:10px}
+  .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-text{font-size:13px;line-height:1.5;color:var(--text)}
+  .step-text b{font-weight:600}
+  .step-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .format-box{background:#F2F3F5;border-radius:10px;padding:12px;font-family:monospace;font-size:12px;color:#444;line-height:1.8;margin-top:8px}
+  .disclaimer-box{background:#FFF8E7;border:1.5px solid #FFD700;border-radius:10px;padding:12px;font-size:11px;color:#7A6000;line-height:1.6;margin-bottom:4px}
   .offer-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease .28s both}
   .offer-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
   .offer-row input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
@@ -86,6 +103,112 @@
   <div class="logo">📊</div>
   <div><h1>Leads Vibe</h1><p>Настройте параметры отчёта</p></div>
 </div>
+
+<!-- Переключатель режима -->
+<div class="card" style="animation-delay:0s;padding:12px 16px">
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tabRealty" onclick="setMode('realty')">📊 Анализ рынка</button>
+    <button class="mode-tab" id="tabScraper" onclick="setMode('scraper')">📊 Анализ сайтов</button>
+  </div>
+</div>
+
+<!-- СКРЕЙПЕР СЕКЦИЯ -->
+<div class="scraper-section" id="scraperSection">
+  <div class="scraper-hero">
+    <h2>📊 Анализ данных по списку сайтов</h2>
+    <p>Сервис обрабатывает информацию из открытых источников на основе заданного списка сайтов и формирует структурированный отчёт с основными характеристиками.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Как это работает</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <b>Запустите формирование отчёта</b>
+          <div class="step-sub">Нажмите кнопку ниже — бот перейдёт в режим ожидания файла</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <b>Укажите список сайтов для анализа</b>
+          <div class="step-sub">Подготовьте файл по образцу который пришлёт бот</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <b>Загрузите файл с перечнем сайтов</b>
+          <div class="step-sub">Формат .txt или .xlsx — один домен на строку</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <b>Получите структурированный отчёт в формате Excel</b>
+          <div class="step-sub">Готовый отчёт придёт в этот чат через 10–30 минут</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Формат файла</div>
+    <div class="step-text" style="margin-bottom:8px;color:var(--muted)">Файл должен содержать список сайтов, которые необходимо проанализировать. Каждый домен указывается с новой строки.</div>
+    <div class="format-box">example-agency.ru<br>realty-moscow.ru<br>an-capital.ru<br>estateliga.ru</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">Без http:// · Максимум 300 сайтов</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Что будет в отчёте</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#1A73E8">✓</div>
+        <div class="step-text">Название компании и ссылка на сайт</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#1A73E8">✓</div>
+        <div class="step-text">
+          Контактная информация, указанная на сайте
+          <div class="step-sub" style="font-size:11px;color:var(--muted)">Контактные данные, размещённые в открытом доступе на сайте</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#1A73E8">✓</div>
+        <div class="step-text">Email адрес (при наличии)</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#1A73E8">✓</div>
+        <div class="step-text">Дата формирования отчёта</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    ℹ️ Сервис обрабатывает информацию из открытых источников в сети Интернет и предоставляет её в структурированном виде. LeadsVibe не является источником данных и не аффилирован с анализируемыми сайтами.
+  </div>
+
+  <div class="offer-card" style="margin-bottom:10px">
+    <label class="offer-row">
+      <input type="checkbox" id="scraperOfferCheck" checked onchange="updateScraperBtn()">
+      <span class="offer-text">
+        Я подтверждаю, что использую результаты исключительно в аналитических целях и принимаю условия
+        <a href="https://jv1234.tilda.ws/offer" target="_blank">пользовательского соглашения</a>
+        и <a href="https://jv1234.tilda.ws/privacy" target="_blank">политики конфиденциальности</a>.
+      </span>
+    </label>
+  </div>
+
+  <div style="padding:0 0 120px">
+    <button id="scraperLaunchBtn" onclick="launchScraper()" style="width:100%;padding:15px;border:none;border-radius:14px;background:#1A73E8;color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 18px rgba(26,115,232,.4)">
+      📊 Сформировать отчёт
+    </button>
+  </div>
+</div>
+
+<!-- Секция анализа рынка -->
+<div class="realty-section" id="realtySection">
 
 <!-- Источник данных -->
 <div class="card" style="animation-delay:.05s">
@@ -202,7 +325,7 @@
 </div>
 
 <div class="bottom-bar">
-  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>🔍 Выбери параметры</button>
+  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>🔍 Выберите параметры</button>
 </div>
 
 <script>
@@ -240,6 +363,45 @@ const CITIES = [
   {id:"5047", name:"Чебоксары"},
   {id:"5048", name:"Челябинск"},
 ];
+
+let appMode = 'realty';
+
+function setMode(m) {
+  appMode = m;
+  document.getElementById('tabRealty').classList.toggle('active', m==='realty');
+  document.getElementById('tabScraper').classList.toggle('active', m==='scraper');
+  document.getElementById('scraperSection').classList.toggle('show', m==='scraper');
+  document.getElementById('realtySection').classList.toggle('hidden-mode', m==='scraper');
+  updateScraper();
+}
+
+function updateScraperBtn() {
+  const btn = document.getElementById('scraperLaunchBtn');
+  if (!btn) return;
+  const ok = document.getElementById('scraperOfferCheck')?.checked;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.5';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+}
+
+function launchScraper() {
+  const ok = document.getElementById('scraperOfferCheck')?.checked;
+  if (!ok) return;
+  const payload = { mode: 'scraper' };
+  if(tg) tg.sendData(JSON.stringify(payload));
+  else alert(JSON.stringify(payload));
+}
+
+function updateScraper() {
+  const btn = document.getElementById('launchBtn');
+  if (appMode === 'scraper') {
+    const ok = document.getElementById('scraperOfferCheck')?.checked;
+    btn.disabled = !ok;
+    btn.innerHTML = ok
+      ? '📊 Сформировать отчёт'
+      : '📊 Примите условия соглашения';
+  }
+}
 
 const state = {
   source: 'cian',
