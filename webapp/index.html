@@ -58,6 +58,16 @@
   .summary-title{font-size:11px;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
   .summary-chips{display:flex;flex-wrap:wrap;gap:6px}
   .s-chip{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
+  .source-list{display:flex;flex-direction:column;gap:8px}
+  .source-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+  .source-item.active{border-color:#2AABEE;background:rgba(42,171,238,.08)}
+  .source-item.disabled{opacity:.5;cursor:not-allowed}
+  .source-dot{width:8px;height:8px;border-radius:50%;background:#2AABEE;flex-shrink:0}
+  .source-dot.gray{background:#999}
+  .source-name{flex:1;font-size:14px;font-weight:500;color:var(--text)}
+  .source-badge{font-size:11px;padding:2px 8px;border-radius:20px}
+  .active-badge{background:rgba(42,171,238,.15);color:#1a8ab8}
+  .dev-badge{background:rgba(150,150,150,.15);color:#888}
   .offer-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease .28s both}
   .offer-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
   .offer-row input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
@@ -73,8 +83,30 @@
 </head>
 <body>
 <div class="header">
-  <div class="logo">🏢</div>
-  <div><h1>Leads Vibe</h1><p>Настрой параметры подбора</p></div>
+  <div class="logo">📊</div>
+  <div><h1>Leads Vibe</h1><p>Настройте параметры отчёта</p></div>
+</div>
+
+<!-- Источник данных -->
+<div class="card" style="animation-delay:.05s">
+  <div class="section-label">Источник данных</div>
+  <div class="source-list">
+    <div class="source-item active" id="src-cian" onclick="setSource('cian')">
+      <div class="source-dot"></div>
+      <div class="source-name">cian.ru</div>
+      <div class="source-badge active-badge">Активен</div>
+    </div>
+    <div class="source-item disabled" id="src-avito" onclick="return false">
+      <div class="source-dot gray"></div>
+      <div class="source-name">avito.ru</div>
+      <div class="source-badge dev-badge">В разработке</div>
+    </div>
+    <div class="source-item disabled" id="src-yandex" onclick="return false">
+      <div class="source-dot gray"></div>
+      <div class="source-name">realty.yandex.ru</div>
+      <div class="source-badge dev-badge">В разработке</div>
+    </div>
+  </div>
 </div>
 
 <!-- Тип недвижимости -->
@@ -162,7 +194,7 @@
   <label class="offer-row">
     <input type="checkbox" id="offerCheck" checked onchange="update()">
     <span class="offer-text">
-      Нажимая «Начать подбор», я принимаю условия
+      Нажимая «Сформировать отчёт», я принимаю условия
       <a href="https://jv1234.tilda.ws/offer" target="_blank">пользовательского соглашения</a>
       и <a href="https://jv1234.tilda.ws/privacy" target="_blank">политики конфиденциальности</a>.
     </span>
@@ -177,7 +209,7 @@
 const tg = window.Telegram?.WebApp;
 if(tg){tg.ready();tg.expand();tg.setHeaderColor('#F2F3F5');tg.setBackgroundColor('#F2F3F5')}
 
-// Все города РФ с кодами регионов ЦИАН
+// Все города РФ с кодами регионов открытых источников
 const CITIES = [
   {id:"1", name:"Москва"},
   {id:"2", name:"Санкт-Петербург"},
@@ -210,6 +242,7 @@ const CITIES = [
 ];
 
 const state = {
+  source: 'cian',
   propType: 'residential',
   types: {new:false, old:false},
   rooms: new Set(),
@@ -217,6 +250,14 @@ const state = {
   cityId: null,
   cityName: null,
 };
+
+function setSource(s){
+  state.source = s;
+  ['cian','avito','yandex'].forEach(id => {
+    const el = document.getElementById('src-'+id);
+    if(el) el.classList.toggle('active', id===s);
+  });
+}
 
 function setPropType(t){
   state.propType=t;
@@ -294,7 +335,7 @@ function update(){
   else if(!agreed) btn.innerHTML='☑️ Подтверди соглашение';
   else{
     const cnt=state.propType==='residential'?state.rooms.size:state.commTypes.size;
-    btn.innerHTML=`🚀 Начать подбор <span class="btn-count">${cnt} тип${cnt>1?'а':''}</span>`;
+    btn.innerHTML=`🚀 Сформировать отчёт <span class="btn-count">${cnt} тип${cnt>1?'а':''}</span>`;
   }
   if(hasSel&&priceOk&&state.cityId){
     const price=min&&max?`${fmt(min)}-${fmt(max)} ₽`:min?`от ${fmt(min)} ₽`:max?`до ${fmt(max)} ₽`:'Любая цена';
@@ -323,6 +364,7 @@ function launch(){
     comm_types:[...state.commTypes],
     price_min:min, price_max:max,
     region:state.cityId,
+    source:state.source,
     city_name:state.cityName,
   };
   if(tg)tg.sendData(JSON.stringify(payload));
