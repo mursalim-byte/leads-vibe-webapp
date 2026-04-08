@@ -85,6 +85,23 @@
   .step-sub{font-size:11px;color:var(--muted);margin-top:2px}
   .format-box{background:#F2F3F5;border-radius:10px;padding:12px;font-family:monospace;font-size:12px;color:#444;line-height:1.8;margin-top:8px}
   .disclaimer-box{background:#FFF8E7;border:1.5px solid #FFD700;border-radius:10px;padding:12px;font-size:11px;color:#7A6000;line-height:1.6;margin-bottom:4px}
+  /* Оплата */
+  .pay-section{display:none}.pay-section.show{display:block}
+  .balance-card{background:linear-gradient(135deg,#1A73E8,#0D47A1);border-radius:14px;padding:18px;color:#fff;margin-bottom:12px;text-align:center}
+  .balance-card .bal-label{font-size:12px;opacity:.8;margin-bottom:4px}
+  .balance-card .bal-num{font-size:32px;font-weight:700}
+  .balance-card .bal-sub{font-size:12px;opacity:.7;margin-top:4px}
+  .pkg-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+  .pkg-item{border:2px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;background:var(--card);position:relative}
+  .pkg-item.popular{border-color:#1A73E8}
+  .pkg-popular-badge{position:absolute;top:-10px;right:12px;background:#1A73E8;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px}
+  .pkg-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .pkg-desc{font-size:12px;color:var(--muted)}
+  .pkg-price{font-size:18px;font-weight:700;color:var(--accent);margin-top:6px}
+  .pkg-per{font-size:11px;color:var(--muted);font-weight:400}
+  .pay-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--border);border-radius:12px;padding:4px;margin-bottom:12px}
+  .pay-tab{padding:8px;border:none;border-radius:9px;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+  .pay-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,.1)}
   .offer-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);animation:fadeUp .3s ease .28s both}
   .offer-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
   .offer-row input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
@@ -106,9 +123,10 @@
 
 <!-- Переключатель режима -->
 <div class="card" style="animation-delay:0s;padding:12px 16px">
-  <div class="mode-tabs">
-    <button class="mode-tab active" id="tabRealty" onclick="setMode('realty')">📊 Анализ рынка</button>
-    <button class="mode-tab" id="tabScraper" onclick="setMode('scraper')">📊 Анализ сайтов</button>
+  <div class="mode-tabs" style="grid-template-columns:1fr 1fr 1fr">
+    <button class="mode-tab active" id="tabRealty" onclick="setMode('realty')">📊 Рынок</button>
+    <button class="mode-tab" id="tabScraper" onclick="setMode('scraper')">📡 Сайты</button>
+    <button class="mode-tab" id="tabPay" onclick="setMode('pay')">💳 Баланс</button>
   </div>
 </div>
 
@@ -203,6 +221,88 @@
   <div style="padding:0 0 120px">
     <button id="scraperLaunchBtn" onclick="launchScraper()" style="width:100%;padding:15px;border:none;border-radius:14px;background:#1A73E8;color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 18px rgba(26,115,232,.4)">
       📊 Сформировать отчёт
+    </button>
+  </div>
+</div>
+
+<!-- СЕКЦИЯ ОПЛАТЫ -->
+<div class="pay-section" id="paySection">
+
+  <div class="balance-card">
+    <div class="bal-label">Ваш баланс</div>
+    <div class="bal-num" id="balRealtyNum">—</div>
+    <div class="bal-sub">отчётов по рынку недвижимости</div>
+  </div>
+
+  <div class="card" style="margin-bottom:8px">
+    <div class="section-label" style="margin-bottom:8px">Отчёты по рынку недвижимости</div>
+    <div class="pay-tabs">
+      <button class="pay-tab active" id="payTabRealty" onclick="setPayTab('realty')">📊 Рынок</button>
+      <button class="pay-tab" id="payTabScraper" onclick="setPayTab('scraper')">📡 Сайты</button>
+    </div>
+
+    <div id="pkgRealty" class="pkg-grid">
+      <div class="pkg-item" onclick="selectPkg('realty_3')">
+        <div class="pkg-name">🟢 Старт</div>
+        <div class="pkg-desc">3 аналитических отчёта по рынку</div>
+        <div class="pkg-price">490 ₽ <span class="pkg-per">· 163₽/отчёт</span></div>
+      </div>
+      <div class="pkg-item popular" onclick="selectPkg('realty_10')">
+        <div class="pkg-popular-badge">ПОПУЛЯРНЫЙ</div>
+        <div class="pkg-name">🔵 Базовый</div>
+        <div class="pkg-desc">10 аналитических отчётов по рынку</div>
+        <div class="pkg-price">1 290 ₽ <span class="pkg-per">· 129₽/отчёт</span></div>
+      </div>
+      <div class="pkg-item" onclick="selectPkg('realty_30')">
+        <div class="pkg-name">🟣 Профи</div>
+        <div class="pkg-desc">30 аналитических отчётов по рынку</div>
+        <div class="pkg-price">2 990 ₽ <span class="pkg-per">· 100₽/отчёт</span></div>
+      </div>
+      <div class="pkg-item" onclick="selectPkg('realty_100')">
+        <div class="pkg-name">⭐ Агентство</div>
+        <div class="pkg-desc">100 аналитических отчётов по рынку</div>
+        <div class="pkg-price">7 990 ₽ <span class="pkg-per">· 80₽/отчёт</span></div>
+      </div>
+    </div>
+
+    <div id="pkgScraper" class="pkg-grid" style="display:none">
+      <div class="pkg-item" onclick="selectPkg('scraper_1')">
+        <div class="pkg-name">🟢 1 отчёт по сайтам</div>
+        <div class="pkg-desc">Анализ 1 списка сайтов агентств</div>
+        <div class="pkg-price">390 ₽</div>
+      </div>
+      <div class="pkg-item popular" onclick="selectPkg('scraper_5')">
+        <div class="pkg-popular-badge">ПОПУЛЯРНЫЙ</div>
+        <div class="pkg-name">🔵 5 отчётов по сайтам</div>
+        <div class="pkg-desc">Анализ 5 списков сайтов агентств</div>
+        <div class="pkg-price">1 490 ₽ <span class="pkg-per">· 298₽/отчёт</span></div>
+      </div>
+      <div class="pkg-item" onclick="selectPkg('scraper_20')">
+        <div class="pkg-name">🟣 20 отчётов по сайтам</div>
+        <div class="pkg-desc">Анализ 20 списков сайтов агентств</div>
+        <div class="pkg-price">4 990 ₽ <span class="pkg-per">· 250₽/отчёт</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box" style="margin-bottom:10px">
+    ℹ️ После оплаты отчёты начисляются автоматически. Нажмите «Проверить оплату» в боте если баланс не обновился.
+  </div>
+
+  <div class="offer-card" style="margin-bottom:10px">
+    <label class="offer-row">
+      <input type="checkbox" id="payOfferCheck" checked onchange="updatePayBtn()">
+      <span class="offer-text">
+        Я принимаю условия
+        <a href="https://jv1234.tilda.ws/offer" target="_blank">пользовательского соглашения</a>
+        и <a href="https://jv1234.tilda.ws/privacy" target="_blank">политики конфиденциальности</a>.
+      </span>
+    </label>
+  </div>
+
+  <div style="padding:0 0 120px">
+    <button id="payLaunchBtn" onclick="launchPay()" style="width:100%;padding:15px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(232,52,74,.4)">
+      💳 Перейти к оплате
     </button>
   </div>
 </div>
@@ -325,7 +425,7 @@
 </div>
 
 <div class="bottom-bar">
-  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>🔍 Выберите параметры</button>
+  <button class="launch-btn" id="launchBtn" onclick="launch()" disabled>🔍 Выбери параметры</button>
 </div>
 
 <script>
@@ -366,13 +466,57 @@ const CITIES = [
 
 let appMode = 'realty';
 
+let selectedPkg = null;
+let payTab = 'realty';
+
 function setMode(m) {
   appMode = m;
   document.getElementById('tabRealty').classList.toggle('active', m==='realty');
   document.getElementById('tabScraper').classList.toggle('active', m==='scraper');
+  document.getElementById('tabPay').classList.toggle('active', m==='pay');
   document.getElementById('scraperSection').classList.toggle('show', m==='scraper');
-  document.getElementById('realtySection').classList.toggle('hidden-mode', m==='scraper');
-  updateScraper();
+  document.getElementById('paySection').classList.toggle('show', m==='pay');
+  document.getElementById('realtySection').classList.toggle('hidden-mode', m==='scraper' || m==='pay');
+  if(m==='pay') updatePayBtn();
+  if(m==='scraper') updateScraper();
+}
+
+function setPayTab(t) {
+  payTab = t;
+  document.getElementById('payTabRealty').classList.toggle('active', t==='realty');
+  document.getElementById('payTabScraper').classList.toggle('active', t==='scraper');
+  document.getElementById('pkgRealty').style.display = t==='realty' ? 'flex' : 'none';
+  document.getElementById('pkgScraper').style.display = t==='scraper' ? 'flex' : 'none';
+  selectedPkg = null;
+  updatePayBtn();
+}
+
+function selectPkg(key) {
+  selectedPkg = key;
+  // Снимаем выделение со всех
+  document.querySelectorAll('.pkg-item').forEach(el => el.style.background = '');
+  document.querySelectorAll('.pkg-item').forEach(el => el.style.borderColor = '');
+  // Выделяем выбранный
+  event.currentTarget.style.background = 'var(--active-bg)';
+  event.currentTarget.style.borderColor = 'var(--accent)';
+  updatePayBtn();
+}
+
+function updatePayBtn() {
+  const btn = document.getElementById('payLaunchBtn');
+  if(!btn) return;
+  const ok = document.getElementById('payOfferCheck')?.checked && selectedPkg;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.5';
+}
+
+function launchPay() {
+  if(!selectedPkg) return;
+  const ok = document.getElementById('payOfferCheck')?.checked;
+  if(!ok) return;
+  const payload = { mode: 'buy', package_key: selectedPkg };
+  if(tg) tg.sendData(JSON.stringify(payload));
+  else alert('Покупка: ' + selectedPkg);
 }
 
 function updateScraperBtn() {
