@@ -516,7 +516,6 @@ function launchPay() {
   if(!ok) return;
   const payload = { mode: 'buy', package_key: selectedPkg };
   if(tg) tg.sendData(JSON.stringify(payload));
-  else alert('Покупка: ' + selectedPkg);
 }
 
 function updateScraperBtn() {
@@ -533,7 +532,6 @@ function launchScraper() {
   if (!ok) return;
   const payload = { mode: 'scraper' };
   if(tg) tg.sendData(JSON.stringify(payload));
-  else alert(JSON.stringify(payload));
 }
 
 function updateScraper() {
@@ -674,7 +672,6 @@ function launch(){
     city_name:state.cityName,
   };
   if(tg)tg.sendData(JSON.stringify(payload));
-  else alert(JSON.stringify(payload,null,2));
 }
 update();
 </script>
