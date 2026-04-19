@@ -231,34 +231,43 @@
   <div class="balance-card">
     <div class="bal-label">Ваш баланс</div>
     <div class="bal-num" id="balRealtyNum">—</div>
-    <div class="bal-sub">отчётов по рынку недвижимости</div>
+    <div class="bal-sub">отчётов · точный баланс смотрите в боте (/start)</div>
+  </div>
+
+  <!-- Плашка "в разработке" -->
+  <div style="background:#FFF8E7;border:1.5px solid #FFD700;border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px">
+    <span style="font-size:22px;line-height:1">🔧</span>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#7A6000;margin-bottom:4px">Онлайн-оплата в разработке</div>
+      <div style="font-size:12px;color:#7A6000;line-height:1.5">Для пополнения баланса напишите администратору — зачислим вручную в течение нескольких минут.</div>
+    </div>
   </div>
 
   <div class="card" style="margin-bottom:8px">
-    <div class="section-label" style="margin-bottom:8px">Отчёты по рынку недвижимости</div>
+    <div class="section-label" style="margin-bottom:8px">Тарифы</div>
     <div class="pay-tabs">
       <button class="pay-tab active" id="payTabRealty" onclick="setPayTab('realty')">📊 Рынок</button>
       <button class="pay-tab" id="payTabScraper" onclick="setPayTab('scraper')">📡 Сайты</button>
     </div>
 
     <div id="pkgRealty" class="pkg-grid">
-      <div class="pkg-item" onclick="selectPkg('realty_3')">
+      <div class="pkg-item">
         <div class="pkg-name">🟢 Старт</div>
         <div class="pkg-desc">3 аналитических отчёта по рынку</div>
         <div class="pkg-price">490 ₽ <span class="pkg-per">· 163₽/отчёт</span></div>
       </div>
-      <div class="pkg-item popular" onclick="selectPkg('realty_10')">
+      <div class="pkg-item popular">
         <div class="pkg-popular-badge">ПОПУЛЯРНЫЙ</div>
         <div class="pkg-name">🔵 Базовый</div>
         <div class="pkg-desc">10 аналитических отчётов по рынку</div>
         <div class="pkg-price">1 290 ₽ <span class="pkg-per">· 129₽/отчёт</span></div>
       </div>
-      <div class="pkg-item" onclick="selectPkg('realty_30')">
+      <div class="pkg-item">
         <div class="pkg-name">🟣 Профи</div>
         <div class="pkg-desc">30 аналитических отчётов по рынку</div>
         <div class="pkg-price">2 990 ₽ <span class="pkg-per">· 100₽/отчёт</span></div>
       </div>
-      <div class="pkg-item" onclick="selectPkg('realty_100')">
+      <div class="pkg-item">
         <div class="pkg-name">⭐ Агентство</div>
         <div class="pkg-desc">100 аналитических отчётов по рынку</div>
         <div class="pkg-price">7 990 ₽ <span class="pkg-per">· 80₽/отчёт</span></div>
@@ -266,18 +275,18 @@
     </div>
 
     <div id="pkgScraper" class="pkg-grid" style="display:none">
-      <div class="pkg-item" onclick="selectPkg('scraper_1')">
+      <div class="pkg-item">
         <div class="pkg-name">🟢 1 отчёт по сайтам</div>
         <div class="pkg-desc">Анализ 1 списка сайтов компаний</div>
         <div class="pkg-price">390 ₽</div>
       </div>
-      <div class="pkg-item popular" onclick="selectPkg('scraper_5')">
+      <div class="pkg-item popular">
         <div class="pkg-popular-badge">ПОПУЛЯРНЫЙ</div>
         <div class="pkg-name">🔵 5 отчётов по сайтам</div>
         <div class="pkg-desc">Анализ 5 списков сайтов компаний</div>
         <div class="pkg-price">1 490 ₽ <span class="pkg-per">· 298₽/отчёт</span></div>
       </div>
-      <div class="pkg-item" onclick="selectPkg('scraper_20')">
+      <div class="pkg-item">
         <div class="pkg-name">🟣 20 отчётов по сайтам</div>
         <div class="pkg-desc">Анализ 20 списков сайтов компаний</div>
         <div class="pkg-price">4 990 ₽ <span class="pkg-per">· 250₽/отчёт</span></div>
@@ -285,24 +294,9 @@
     </div>
   </div>
 
-  <div class="disclaimer-box" style="margin-bottom:10px">
-    ℹ️ После оплаты отчёты начисляются автоматически. Нажмите «Проверить оплату» в боте если баланс не обновился.
-  </div>
-
-  <div class="offer-card" style="margin-bottom:10px">
-    <label class="offer-row">
-      <input type="checkbox" id="payOfferCheck" checked onchange="updatePayBtn()">
-      <span class="offer-text">
-        Я принимаю условия
-        <a href="https://jv1234.tilda.ws/offer" target="_blank">пользовательского соглашения</a>
-        и <a href="https://jv1234.tilda.ws/privacy" target="_blank">политики конфиденциальности</a>.
-      </span>
-    </label>
-  </div>
-
   <div style="padding:0 0 120px">
-    <button id="payLaunchBtn" onclick="launchPay()" style="width:100%;padding:15px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(232,52,74,.4)">
-      💳 Перейти к оплате
+    <button onclick="launchContactAdmin()" style="width:100%;padding:15px;border:none;border-radius:14px;background:#1A73E8;color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(26,115,232,.4)">
+      ✉️ Написать администратору
     </button>
   </div>
 </div>
@@ -492,30 +486,21 @@ function setPayTab(t) {
 }
 
 function selectPkg(key) {
-  selectedPkg = key;
-  // Снимаем выделение со всех
-  document.querySelectorAll('.pkg-item').forEach(el => el.style.background = '');
-  document.querySelectorAll('.pkg-item').forEach(el => el.style.borderColor = '');
-  // Выделяем выбранный
-  event.currentTarget.style.background = 'var(--active-bg)';
-  event.currentTarget.style.borderColor = 'var(--accent)';
-  updatePayBtn();
+  // заглушка — оплата в разработке
 }
 
 function updatePayBtn() {
-  const btn = document.getElementById('payLaunchBtn');
-  if(!btn) return;
-  const ok = document.getElementById('payOfferCheck')?.checked && selectedPkg;
-  btn.disabled = !ok;
-  btn.style.opacity = ok ? '1' : '0.5';
+  // заглушка — кнопка всегда активна (ведёт к контакту с администратором)
 }
 
 function launchPay() {
-  if(!selectedPkg) return;
-  const ok = document.getElementById('payOfferCheck')?.checked;
-  if(!ok) return;
-  const payload = { mode: 'buy', package_key: selectedPkg };
-  if(tg) tg.sendData(JSON.stringify(payload));
+  // заглушка — не используется
+}
+
+function launchContactAdmin() {
+  if(tg) {
+    tg.showAlert('Для пополнения баланса напишите нам в Telegram.\n\nМы зачислим отчёты вручную в течение нескольких минут.');
+  }
 }
 
 function updateScraperBtn() {
